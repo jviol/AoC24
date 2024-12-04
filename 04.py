@@ -1,6 +1,7 @@
 
 def transposed_and_reversed(M):
-    return [''.join(M[j][i] for j in range(len(M))) for i in reversed(range(len(M[0])))]
+    return [''.join(M[j][i] for j in range(len(M)))
+            for i in reversed(range(len(M[0])))]
 
 def count_xmases_in_rows(M):
     return sum(row[i:i + 4] in ["XMAS", "SAMX"]
@@ -25,3 +26,15 @@ print('Part 1:',
       + count_diagonal_xmases(grid)
       + count_diagonal_xmases(tr_grid))
 
+
+def Xs(M):
+    return sum(
+        M[i][j] + M[i][j + 2]
+            + M[i + 1][j + 1]
+        + M[i + 2][j] + M[i + 2][j + 2]
+        in ['MSAMS', 'MMASS', 'SSAMM', 'SMASM']
+        for i in range(len(M) - 2)
+        for j in range(len(M[0]) - 2)
+    )
+
+print('Part 2:', Xs(grid))
