@@ -11,24 +11,22 @@ with open('input/08.txt') as f:
         max_x = x
     max_y = y
 
-antinodes = set()
-for positions in freq_map.values():
-    for p1 in positions:
-        for p2 in positions:
-            if p1 != p2:
-                p = (2 * p1[0] - p2[0], 2 * p1[1] - p2[1])
-                if 0 <= p[0] <= max_y and 0 <= p[1] <= max_x:
-                    antinodes.add(p)
+def within_bounds(p):
+    return 0 <= p[0] <= max_y and 0 <= p[1] <= max_x
 
-print("Part 1:", len(antinodes))
-
-antinodes = set()
+antinodes1 = set()
+antinodes2 = set()
 for positions in freq_map.values():
     for y1, x1 in positions:
         for y2, x2 in positions:
             if (y1, x1) != (y2, x2):
-                antinodes |= set(takewhile(lambda p: 0 <= p[0] <= max_y and 0 <= p[1] <= max_x,
-                                           map(lambda n: (y1 + n * (y1 - y2), x1 + n * (x1 - x2)),
+                dy, dx = y1 - y2, x1 - x2
+                p = y1 + dy, x1 + dx
+                if within_bounds(p):
+                    antinodes1.add(p)
+                antinodes2 |= set(takewhile(within_bounds,
+                                            map(lambda n: (y1 + n * dy, x1 + n * dx),
                                                count())))
 
-print("Part 2:", len(antinodes))
+print("Part 1:", len(antinodes1))
+print("Part 2:", len(antinodes2))
