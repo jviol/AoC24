@@ -1,3 +1,7 @@
+import time
+from multiprocessing import Pool
+
+start_time = time.time()
 obstructions = set()
 with open('input/06.txt') as f:
     for y, line in enumerate(f):
@@ -10,14 +14,11 @@ with open('input/06.txt') as f:
         max_x = x
     max_y = y
 
-
 def within_bounds(p):
     return 0 <= p[0] <= max_y and 0 <= p[1] <= max_x
 
 
-def part1():
-    guard_pos = starting_guard_pos
-    guard_dir = starting_guard_dir
+def part1(guard_pos, guard_dir):
     positions_visited = set()
     while within_bounds(guard_pos):
         positions_visited.add(guard_pos)
@@ -31,18 +32,7 @@ def part1():
     return positions_visited
 
 
-positions_visited = part1()
-print("Part 1:", len(positions_visited))
-
-
-iterations = 0
-positions_to_try = [p for p in positions_visited if p != starting_guard_pos]
-
-
 def is_loop(obstruction):
-    global iterations, positions_to_try
-    iterations += 1
-    print('\r', iterations, "/", len(positions_to_try), end='', flush=True)
     obsts = obstructions | {obstruction}
     guard_pos = starting_guard_pos
     guard_dir = starting_guard_dir
@@ -60,5 +50,12 @@ def is_loop(obstruction):
             guard_pos = new_pos
     return False
 
+if __name__ == '__main__':
+    positions_visited = part1(starting_guard_pos, starting_guard_dir)
+    print("Part 1:", len(positions_visited))
 
-print("\nPart 2:", sum(is_loop(p) for p in positions_to_try))
+    positions_to_try = [p for p in positions_visited if p != starting_guard_pos]
+    with Pool() as pool:
+        print("\nPart 2:", sum(pool.map(is_loop, positions_to_try)), "Time:", time.time() - start_time, "sec.")
+
+
