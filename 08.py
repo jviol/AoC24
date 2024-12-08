@@ -1,5 +1,4 @@
 from collections import defaultdict
-from functools import reduce
 from itertools import count, takewhile
 
 freq_map = defaultdict(set)
@@ -11,8 +10,10 @@ with open('input/08.txt') as f:
         max_x = x
     max_y = y
 
+
 def within_bounds(p):
     return 0 <= p[0] <= max_y and 0 <= p[1] <= max_x
+
 
 antinodes1 = set()
 antinodes2 = set()
@@ -26,7 +27,7 @@ for positions in freq_map.values():
                     antinodes1.add(p)
                 antinodes2 |= set(takewhile(within_bounds,
                                             map(lambda n: (y1 + n * dy, x1 + n * dx),
-                                               count())))
+                                                count())))
 
 print("Part 1:", len(antinodes1))
 print("Part 2:", len(antinodes2))
