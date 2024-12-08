@@ -21,13 +21,12 @@ for positions in freq_map.values():
     for y1, x1 in positions:
         for y2, x2 in positions:
             if (y1, x1) != (y2, x2):
-                dy, dx = y1 - y2, x1 - x2
-                p = y1 + dy, x1 + dx
-                if within_bounds(p):
-                    antinodes1.add(p)
-                antinodes2 |= set(takewhile(within_bounds,
-                                            map(lambda n: (y1 + n * dy, x1 + n * dx),
-                                                count())))
+                dy = y1 - y2
+                dx = x1 - x2
+                project = lambda n: (y1 + n * dy, x1 + n * dx)
+                project_multiple = lambda ns : set(takewhile(within_bounds, map(project, ns)))
+                antinodes1 |= project_multiple([1])
+                antinodes2 |= project_multiple(count())
 
 print("Part 1:", len(antinodes1))
 print("Part 2:", len(antinodes2))
