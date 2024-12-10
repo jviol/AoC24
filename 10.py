@@ -1,5 +1,3 @@
-from itertools import chain
-
 with open('input/10.txt') as f:
     topomap = [[int(c) for c in line.strip()] for line in f]
 
@@ -39,19 +37,8 @@ def reachable_summits(y,x) -> set[tuple[int, int]]:
             res |= reachable_summits(y1, x1)
     return res
 
-print(sum(score((y,x), 0) for y,row in enumerate(topomap) for x, h in enumerate(row) if h == 0))
+print("Part 1:", sum(len(reachable_summits(y,x)) for y,row in enumerate(topomap) for x, h in enumerate(row) if h == 0))
+print("Part 2:", sum(score((y,x), 0) for y,row in enumerate(topomap) for x, h in enumerate(row) if h == 0))
 
-# for summits in reachable_summits(0, 2):
-#     print(summits)
-
-# total = 0
-# for y, row in enumerate(topomap):
-#     for x, h in enumerate(row):
-#         if h == 0:
-#             sc = score((y,x), h)
-#             print("Trailhead at", (y,x), "has a score of", sc)
-#             total += sc
-#
-# print(total)
 
 
