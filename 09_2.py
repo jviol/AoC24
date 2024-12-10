@@ -1,3 +1,5 @@
+import time
+
 
 class Slot:
     def __init__(self, c):
@@ -8,15 +10,15 @@ class Slot:
         return f"(data:{self.data}, free_space:{self.free_space}"
 
 
+start_time = time.time()
 with open('input/09.txt') as f:
     s = f.read().strip()
     files = [(id, int(file_size)) for id, file_size in enumerate(s[0::2])]
     empty_spaces = [Slot(c) for c in s[1::2]]
 
-
 moved = set()
 for file_id, file_size in files[::-1]:
-    print("\r", len(files)-file_id, "/", len(files), end='', flush=True)
+    print("\r", len(files) - file_id, "/", len(files), end='', flush=True)
     for slot_id, slot in enumerate(empty_spaces):
         if slot_id >= file_id:  # only move files to the left
             break
@@ -26,12 +28,12 @@ for file_id, file_size in files[::-1]:
             moved.add(file_id)
             break
 
-
 layout = []
 for id, file_size in files:
-    layout += [id if id not in moved else 0]*file_size
+    layout += [id if id not in moved else 0] * file_size
     if id < len(empty_spaces):
         slot = empty_spaces[id]
-        layout += slot.data + [0]*slot.free_space
+        layout += slot.data + [0] * slot.free_space
 
-print("\nPart 2:", sum(i*x for i,x in enumerate(layout)))
+print("\nPart 2:", sum(i * x for i, x in enumerate(layout)))
+print(f"Time: {time.time() - start_time:.2f} sec.")
