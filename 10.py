@@ -39,7 +39,7 @@ def reachable_summits(y,x) -> set[tuple[int, int]]:
             res |= reachable_summits(y1, x1)
     return res
 
-print(sum(len(reachable_summits(y,x)) for y,row in enumerate(topomap) for x, h in enumerate(row) if h == 0))
+print(sum(score((y,x), 0) for y,row in enumerate(topomap) for x, h in enumerate(row) if h == 0))
 
 # for summits in reachable_summits(0, 2):
 #     print(summits)
