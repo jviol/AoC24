@@ -25,12 +25,11 @@ class Region:
         res = 0
         for dy, dx in directions:
             d_perim = self.perim_plots(dy,dx)
-            # merge adjacent plots in d_perim
+            # group adjacent plots in d_perim
             key, value = get_grouping_key_and_value(dy)
             d_perim.sort(key=key)
             # print("\t", (dy,dx), d_perim)
-            groups = groupby(d_perim, key)
-            for k, group in groups:
+            for k, group in groupby(d_perim, key):
                 # group = list(group)
                 distinct_sides = count_consecutive_groups(list(map(value, group)))
                 # print("\t\t", k, list(group), distinct_sides)
@@ -63,12 +62,6 @@ def get_grouping_key_and_value(dy:int) -> tuple[Callable[[tuple[int,int]],int],C
     else:
         return get_x, get_y
 
-def lookup(y, x) -> bool | Region:
-    try:
-        return 0 <= y and 0 <= x and region_map[y][x]
-    except IndexError:
-        return False
-
 def get_x(p):
     y,x = p
     return x
@@ -77,6 +70,13 @@ def get_y(p):
     y,x = p
     return y
 
+def lookup(y, x) -> bool | Region:
+    try:
+        return 0 <= y and 0 <= x and region_map[y][x]
+    except IndexError:
+        return False
+
+# count the number of groups of consecutive ints in lst
 def count_consecutive_groups(lst:list[int]) -> int:
     lst.sort()
     group_count = 1
