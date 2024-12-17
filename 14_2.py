@@ -1,10 +1,6 @@
 import re
-import matplotlib.pyplot as plt
-import numpy as np
 
 
-
-q = [0, 0, 0, 0]
 w = 101
 h = 103
 ps = []
@@ -15,22 +11,6 @@ with open('input/14.txt') as f:
         x0,y0,dx,dy = [int(g) for g in m.groups()]
         ps.append((x0,y0))
         vs.append((dx,dy))
-
-def get_quadrant(x,y):
-    if x < w // 2:
-        qx = 0
-    elif x > w // 2:
-        qx = 1
-    else:
-        return None
-    if y < h // 2:
-        qy = 0
-    elif y > h // 2:
-        qy = 2
-    else:
-        return None
-    return qx+qy
-
 
 def step(n):
     for t in range(n):
@@ -45,22 +25,44 @@ def print_picture():
     print('\n'.join(''.join(line) for line in picture))
 
 
-def is_symmetrical():
-    in_left_side = sum(x < w // 2 for x,y in ps)
-    in_right_side = sum(x > w // 2 for x,y in ps)
-    return in_left_side == in_right_side
+def has_vertical_clumping():
+    # Count particles in each column
+    col_counts = [0] * w
+    for (x, y) in ps:
+        col_counts[x] += 1
+
+    # Calculate variation in density
+    avg_col = sum(col_counts) / w
+    col_var = sum((c - avg_col) ** 2 for c in col_counts) / w
+
+    # High variance indicates uneven distribution (possible clumping)
+    return col_var > avg_col ** 2
+
+def has_horizontal_clumping():
+    # Count particles in each row
+    row_counts = [0] * h
+    for (x, y) in ps:
+        row_counts[y] += 1
+
+    # Calculate variation in density
+    avg_row = sum(row_counts) / h
+    row_var = sum((c - avg_row) ** 2 for c in row_counts) / h
+
+    # High variance indicates uneven distribution (possible clumping)
+    return row_var > avg_row ** 2
+
 
 i = 0
+horizontal_clumps = []
+vertical_clumps = []
+
 while True:
-    while not is_symmetrical():
-        i += 1
-        step(1)
-    print("Iteration", i)
-    print_picture()
-    input("continue..?")
     i += 1
     step(1)
-
+    if has_horizontal_clumping() and has_vertical_clumping():
+        print("Iteration", i)
+        print_picture()
+        break
 
 
 
